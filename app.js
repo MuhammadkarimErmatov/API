@@ -9,6 +9,7 @@ const elContainer = document.getElementById("container");
     const elFormButton = document.getElementById("submitButton");
     const elToastTemlate = document.getElementById("toastTemplate");
     const elToast = document.getElementById("toast")
+    const elCarForm = document.getElementById("carAddForm")
 
 
 
@@ -82,6 +83,28 @@ function deleteCar(id) {
 .catch(()=>{})
 .finally(()=> {}); 
 }
+
+function add(data){
+  fetch("https://json-api.uz/api/project/fn44-amaliyot/cars/",{
+    method: "POST",
+    headers:{
+      "Content-Type":"aplication/json",
+    },
+    body:JSON.stringify(daata),
+  })
+
+.then((res)=>{
+return res.json();
+})
+
+.then((res) => {
+elCarForm.reset();
+ui([res],false);
+document.getElementById("my_modal_3").closest();
+});
+
+}
+
  elPrev.addEventListener("click", ()=> {
   if (currentIndex > 0) {
          currentIndex--; render();
@@ -90,35 +113,20 @@ function deleteCar(id) {
  elNext.addEventListener("click", ()=> {
      if (currentIndex < data.length - 1) {
          currentIndex++; render();
-         }
+         }  
          
  });
 
-elFormButton.addEventListener("click", () => {
-const obj = {
-    name: elCarName.value,
-    year: elCarYear.value,  
-    color: elCarColor.value,
-    ot_kuchi: elCarPower.value,
-    max_tezligi: elCarSpeed.value
+elCarForm.addEventListener("submit", (evt) => {
+evt.preventDefault();
+const formData = new FormData(elCarForm);
 
+const result = {}
 
-};
-if(obj.name.trim() === "") {
-    const clone = elToastTemlate.cloneNode(true).content;
-    clone.querySelector("span").innerText = "Mashina nomini kiriting"
-    elToast.appendChild(clone);
-    elCarName.focus();
-    setTimeout(() => {
-        document.querySelector([role="alert"]).remove();
-    },2000)
-}
+formData.forEach((value, key)=>{
+result[key] = value
 
-elCarName.value = "";
-elCarYear.value = "";
-elCarColor.value = "";
-elCarPower.value = "";
-elCarSpeed.value = "";
-
+})
+console.log(result);
 
 });
